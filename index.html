@@ -33,7 +33,11 @@
       const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
       const textMesh = new THREE.Mesh(geometry, material);
       scene.add(textMesh);
-      textMesh.position.set(-3, 0, -5); // Позиционируем текст
+
+      // Центрируем текст относительно сцены
+      geometry.computeBoundingBox();
+      const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+      textMesh.position.set(centerOffset, 0, -5); // Позиционируем текст по центру сцены
     });
 
     camera.position.z = 5;
@@ -41,6 +45,10 @@
     // Анимация
     const animate = function () {
       requestAnimationFrame(animate);
+
+      // Поворот текста для эффекта
+      scene.children[1]?.rotation.y += 0.01;
+
       renderer.render(scene, camera);
     };
     animate();

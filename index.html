@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Сцена с текстом в Three.js</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js';
+    import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three/examples/jsm/loaders/FontLoader.js';
+    import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three/examples/jsm/geometries/TextGeometry.js';
+
+    // Создаем сцену, камеру и рендерер
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Загрузка шрифта и создание текста
+    const loader = new FontLoader();
+    loader.load('https://three.js.org/fonts/helvetiker_regular.typeface.json', function (font) {
+      const geometry = new TextGeometry('йоу реп, Three.js!', {
+        font: font,
+        size: 1,
+        height: 0.2,
+        curveSegments: 12,
+      });
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const textMesh = new THREE.Mesh(geometry, material);
+      scene.add(textMesh);
+      textMesh.position.set(-3, 0, -5); // Позиционируем текст
+    });
+
+    camera.position.z = 5;
+
+    // Анимация
+    const animate = function () {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // Обработка изменения размера окна
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
